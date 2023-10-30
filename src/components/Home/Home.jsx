@@ -62,15 +62,7 @@ export default function Home() {
             console.log(category);
             return (
               <ProductCard
-                key={e.id}
-                id={e.id} 
-                title={e.title}
-                rating={e.rating.rate}
-                count={e.rating.count}
-                category={e.category}
-                desc={e.description}
-                img={e.image}
-                price={e.price}
+              data = {e}
               />
             );
           })}

@@ -8,9 +8,12 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Stack } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link } from "react-router-dom";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function TopBar() {
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
@@ -37,6 +40,11 @@ export default function TopBar() {
             <Button color="inherit" variant="outlined">
               
             <ShoppingCartIcon />
+            </Button>
+            <Button color="inherit" variant="outlined" onClick={()=>navigate('wishList')}>
+              
+            <FavoriteBorderIcon />
+            
             </Button>
           </Stack>
         </Toolbar>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import getSingleProduct from "../../services/getSingleProduct";
 import {
@@ -12,12 +12,16 @@ import {
   CardContent,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CardMedia from "@mui/material/CardMedia"; // Import CardMedia for displaying product image
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import CardMedia from "@mui/material/CardMedia"; 
+import WishListContext from "../../context/wish.context";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-
+  const { addToWishList, removeFromWishList, wishList } =
+    useContext(WishListContext);
   useEffect(() => {
     async function fetchProductDetails() {
       const res = await getSingleProduct(id);
@@ -36,6 +40,25 @@ export default function ProductDetails() {
   return (
     <Grid container>
       <Grid item xs={12} sm={6}>
+        <Typography>
+          {wishList.some((product) => product.id === id) ? (
+            <Button
+              variant="text"
+              style={{ border: "none" }}
+              onClick={() => removeFromWishList(id)}
+            >
+              <FavoriteIcon color="error" />
+            </Button>
+          ) : (
+            <Button
+              variant="text"
+              style={{ border: "none" }}
+              onClick={() => addToWishList(product)}
+            >
+              <FavoriteBorderIcon />
+            </Button>
+          )}
+        </Typography>
         <CardMedia
           sx={{
             display: "block",
@@ -43,9 +66,8 @@ export default function ProductDetails() {
             width: "75%",
             height: "75%",
             objectFit: "contain",
-            marginTop: "50px"
+            marginTop: "50px",
           }}
-          
           component="img"
           image={product.image}
           alt={product.title}
@@ -61,7 +83,12 @@ export default function ProductDetails() {
             },
           }}
         >
-          <Typography variant="h5" color="textSecondary" gutterBottom sx={{ padding: "16px" , fontWeight:"bold"}}>
+          <Typography
+            variant="h5"
+            color="textSecondary"
+            gutterBottom
+            sx={{ padding: "16px", fontWeight: "bold" }}
+          >
             {product.title}
           </Typography>
           <Typography variant="subtitle1" sx={{ padding: "16px" }}>
@@ -72,9 +99,12 @@ export default function ProductDetails() {
             {" "}
             Description: {product.description}
           </Typography>
-          <Typography variant="body1" color="textSecondary" sx={{ padding: "16px", fontWeight:"bold" }}>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            sx={{ padding: "16px", fontWeight: "bold" }}
+          >
             {" "}
-            
             Price: ${product.price}
           </Typography>
           <Grid container spacing={2} alignItems="center">
@@ -104,7 +134,7 @@ export default function ProductDetails() {
               >
                 <Button
                   variant="outlined"
-                  sx={{ fontWeight: "bold" }} 
+                  sx={{ fontWeight: "bold" }}
                   startIcon={<ShoppingCartIcon />}
                 >
                   Add to Cart
