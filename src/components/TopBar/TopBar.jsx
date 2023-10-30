@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Stack } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Link } from "react-router-dom";
 
 export default function TopBar() {
   return (
@@ -32,9 +34,14 @@ export default function TopBar() {
             <Button color="inherit" variant="outlined">
               Sign Up
             </Button>
+            <Button color="inherit" variant="outlined">
+              
+            <ShoppingCartIcon />
+            </Button>
           </Stack>
         </Toolbar>
       </AppBar>
+      
     </Box>
   );
 }

@@ -63,6 +63,7 @@ export default function Home() {
             return (
               <ProductCard
                 key={e.id}
+                id={e.id} 
                 title={e.title}
                 rating={e.rating.rate}
                 count={e.rating.count}
