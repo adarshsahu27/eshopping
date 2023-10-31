@@ -10,12 +10,15 @@ import {
   IconButton,
   Rating,
   Box,
+  CardActions,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link } from "react-router-dom";
 import WishListContext from "../../context/wish.context";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import CartContext from "../../context/cart.context";
 
 const ProductCard = ({ data }) => {
   const maxLength = 100;
@@ -23,6 +26,7 @@ const ProductCard = ({ data }) => {
   const [isReadMore, setIsReadMore] = useState(false);
   const { addToWishList, removeFromWishList, wishList } =
     useContext(WishListContext);
+  const { addToCart, removeFromCart, cart, input } = useContext(CartContext);
 
   const { id, title, rating, count, category, description, image, price } =
     data;
@@ -56,7 +60,7 @@ const ProductCard = ({ data }) => {
                 <Button
                   variant="text"
                   style={{ border: "none" }}
-                  onClick={() => addToWishList(data)}
+                  onClick={() => addToWishList(data,input)}
                 >
                   <FavoriteBorderIcon />
                 </Button>
@@ -136,7 +140,7 @@ const ProductCard = ({ data }) => {
                     ({count} reviews)
                   </Typography>
                 </Box>
-                <Stack
+                {/* <Stack
                   direction="row"
                   spacing={2}
                   sx={{
@@ -152,9 +156,30 @@ const ProductCard = ({ data }) => {
                   >
                     Add to Cart
                   </Button>
-                </Stack>
+                </Stack> */}
               </CardContent>
             </Link>
+            <CardActions
+              style={{
+                display: "block",
+                margin: "30px auto",
+                textAlign: "center",
+              }}
+            >
+              {cart.some((product) => product.id === data.id) ? (
+                <Button
+                  onClick={() => removeFromCart(data.id)}
+                  variant="contained"
+                >
+                  {" "}
+                  <ShoppingCartIcon /> Remove From Cart
+                </Button>
+              ) : (
+                <Button onClick={() => addToCart(data, 1)} variant="outlined">
+                  <AddShoppingCartIcon /> Add To Cart
+                </Button>
+              )}
+            </CardActions>
           </Card>
         </Grid>
       )}

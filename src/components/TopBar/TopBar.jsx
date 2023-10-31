@@ -8,11 +8,20 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Stack } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Link, useNavigate } from "react-router-dom";
-
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import CartContext from "../../context/cart.context";
+import { useContext } from "react";
+const style = {
+  "&:hover": {
+    backgroundColor: "#1976D2",
+    color: "white",
+  },
+};
 export default function TopBar() {
   const navigate = useNavigate();
+  const { cart } = useContext(CartContext);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -37,19 +46,28 @@ export default function TopBar() {
             <Button color="inherit" variant="outlined">
               Sign Up
             </Button>
-            <Button color="inherit" variant="outlined">
-              
-            <ShoppingCartIcon />
+            <Button
+              onClick={() => navigate("/cart")}
+              color="inherit"
+              variant="outlined"
+              sx={style}
+            >
+              {cart.length === 0 ? (
+                <AddShoppingCartIcon />
+              ) : (
+                <ShoppingCartIcon />
+              )}
             </Button>
-            <Button color="inherit" variant="outlined" onClick={()=>navigate('wishList')}>
-              
-            <FavoriteBorderIcon />
-            
+            <Button
+              color="inherit"
+              variant="outlined"
+              onClick={() => navigate("wishList")}
+            >
+              <FavoriteBorderIcon />
             </Button>
           </Stack>
         </Toolbar>
       </AppBar>
-      
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import getSingleProduct from "../../services/getSingleProduct";
 import {
   Grid,
@@ -10,18 +10,26 @@ import {
   MenuItem,
   Stack,
   CardContent,
+  Rating,
+  CardActions,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import CardMedia from "@mui/material/CardMedia"; 
+import CardMedia from "@mui/material/CardMedia";
 import WishListContext from "../../context/wish.context";
+import CartContext from "../../context/cart.context";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const { addToWishList, removeFromWishList, wishList } =
     useContext(WishListContext);
+  const { addToCart, removeFromCart, cart, handleQuantityChange } =
+    useContext(CartContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchProductDetails() {
       const res = await getSingleProduct(id);
@@ -40,25 +48,6 @@ export default function ProductDetails() {
   return (
     <Grid container>
       <Grid item xs={12} sm={6}>
-        <Typography>
-          {wishList.some((product) => product.id === id) ? (
-            <Button
-              variant="text"
-              style={{ border: "none" }}
-              onClick={() => removeFromWishList(id)}
-            >
-              <FavoriteIcon color="error" />
-            </Button>
-          ) : (
-            <Button
-              variant="text"
-              style={{ border: "none" }}
-              onClick={() => addToWishList(product)}
-            >
-              <FavoriteBorderIcon />
-            </Button>
-          )}
-        </Typography>
         <CardMedia
           sx={{
             display: "block",
@@ -83,6 +72,27 @@ export default function ProductDetails() {
             },
           }}
         >
+          <Typography>
+            {wishList.some((products) => products.id === product.id) ? (
+              <Button
+                variant="text"
+                style={{ border: "none" }}
+                onClick={() => removeFromWishList(product.id)}
+              >
+                <FavoriteIcon color="error" />
+                Remove from WishList
+              </Button>
+            ) : (
+              <Button
+                variant="text"
+                style={{ border: "none" }}
+                onClick={() => addToWishList(product)}
+              >
+                <FavoriteBorderIcon />
+                Add to wishList
+              </Button>
+            )}
+          </Typography>
           <Typography
             variant="h5"
             color="textSecondary"
@@ -91,6 +101,16 @@ export default function ProductDetails() {
           >
             {product.title}
           </Typography>
+          <Rating
+            name="read-only"
+            value={product.rating.rate}
+            readOnly
+            precision={0.5}
+            sx={{
+              color: product.rating.rate < 3 ? "yellow" : "green",
+              marginRight: 1,
+            }}
+          />
           <Typography variant="subtitle1" sx={{ padding: "16px" }}>
             {" "}
             Rating: {product.rating.rate} ({product.rating.count} reviews)
@@ -123,23 +143,37 @@ export default function ProductDetails() {
               </Select>
             </Grid>
             <Grid item xs={6}>
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "20px 0",
+              <CardActions
+                style={{
+                  display: "block",
+                  margin: "30px auto",
+                  textAlign: "center",
                 }}
               >
-                <Button
-                  variant="outlined"
-                  sx={{ fontWeight: "bold" }}
-                  startIcon={<ShoppingCartIcon />}
-                >
-                  Add to Cart
-                </Button>
-              </Stack>
+                {cart.some((products) => products.id === product.id) ? (
+                  <>
+                    <Button
+                      onClick={() => removeFromCart(product.id)}
+                      variant="contained"
+                    >
+                      <ShoppingCartIcon /> Remove From Cart
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => navigate("/cart")}
+                    >
+                      Go to Cart
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => addToCart(product, 1)}
+                    variant="outlined"
+                  >
+                    <AddShoppingCartIcon /> Add To Cart
+                  </Button>
+                )}
+              </CardActions>
             </Grid>
           </Grid>
         </CardContent>
